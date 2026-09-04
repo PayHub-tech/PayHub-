@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PayHub · 商户中心</title>
+<style>
+:root{--blue:#1769ff;--dark:#101b33;--muted:#8792a5;--line:#e7ecf3}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial;background:#f5f8fc;color:var(--dark)}
+.wrap{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr}.brand{background:linear-gradient(145deg,#1769ff,#0b55df);color:#fff;padding:60px 8%;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}.brand:after{content:"";position:absolute;width:480px;height:480px;border-radius:50%;right:-220px;bottom:-200px;background:#ffffff12}.logo{font-size:29px;font-weight:900;position:absolute;top:34px}.logo span{opacity:.95}.brand h1{font-size:46px;line-height:1.1;margin:0 0 18px;max-width:540px}.brand p{font-size:17px;opacity:.82;line-height:1.7;max-width:520px}.features{display:grid;gap:13px;margin-top:28px}.feature{display:flex;gap:12px;align-items:center;font-size:14px}.ico{width:34px;height:34px;border-radius:10px;background:#ffffff18;display:grid;place-items:center}.panel{display:flex;align-items:center;justify-content:center;padding:30px}.box{width:100%;max-width:440px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:32px;box-shadow:0 18px 60px #20375c12}.tabs{display:flex;background:#f2f5f9;border-radius:10px;padding:4px;margin-bottom:26px}.tab{flex:1;border:0;background:transparent;padding:11px;border-radius:8px;font-weight:750;color:#788397}.tab.active{background:#fff;color:var(--blue);box-shadow:0 2px 8px #1b355c12}.title{font-size:26px;font-weight:850;margin-bottom:7px}.desc{color:var(--muted);font-size:13px;margin-bottom:24px}.form{display:grid;gap:15px}.field{display:grid;gap:7px}.field label{font-size:13px;font-weight:700;color:#536076}.field input{width:100%;border:1px solid #dfe5ed;border-radius:10px;padding:13px 14px;outline:none;background:#fff}.field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1769ff12}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.check{font-size:12px;color:#778297}.link{color:var(--blue);font-size:12px;text-decoration:none;cursor:pointer}.primary{border:0;background:var(--blue);color:#fff;padding:14px;border-radius:10px;font-weight:800;cursor:pointer;font-size:15px}.primary:disabled{opacity:.6}.notice{display:none;margin-bottom:14px;padding:11px 12px;border-radius:9px;font-size:13px}.notice.err{background:#fff0f0;color:#c7373d}.notice.ok{background:#eefaf5;color:#17865e}.bottom{margin-top:22px;text-align:center;color:#9aa3b2;font-size:11px}.register-only{display:none}.otp-row{display:grid;grid-template-columns:1fr 110px;gap:8px}.secondary{border:1px solid #dfe5ed;background:#f7f9fc;border-radius:9px;font-size:12px;font-weight:700;color:#526078}
+@media(max-width:820px){.wrap{grid-template-columns:1fr}.brand{display:none}.panel{padding:18px}.box{padding:25px;box-shadow:0 10px 35px #20375c10}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="brand">
+<div class="logo">PayHub</div>
+<div>
+<h1>让每一笔收款，<br>都更简单。</h1>
+<p>PayHub 商户平台，统一管理订单、余额、API 与支付通道，为网站和应用提供清晰可靠的收款基础设施。</p>
+<div class="features">
+<div class="feature"><span class="ico">✓</span>订单与钱包统一管理</div>
+<div class="feature"><span class="ico">⌘</span>API 接口快速接入</div>
+<div class="feature"><span class="ico">↗</span>响应式商户后台</div>
+</div></div>
+</section>
+<section class="panel"><div class="box">
+<div class="tabs"><button class="tab active" id="loginTab">登录</button><button class="tab" id="regTab">注册商户</button></div>
+<div id="notice" class="notice"></div>
+<div id="loginForm">
+<div class="title">欢迎回来</div><div class="desc">登录 PayHub 商户中心</div>
+<div class="form">
+<div class="field"><label>登录邮箱</label><input id="loginEmail" type="email" placeholder="merchant@example.com" autocomplete="email"></div>
+<div class="field"><label>密码</label><input id="loginPass" type="password" placeholder="请输入密码" autocomplete="current-password"></div>
+<div class="row"><label class="check"><input type="checkbox" id="remember"> 记住登录状态</label><a class="link" onclick="forgot()">忘记密码？</a></div>
+<button class="primary" id="loginBtn" onclick="login()">登录商户中心</button>
+</div></div>
+<div id="regForm" class="register-only">
+<div class="title">创建商户账户</div><div class="desc">几步即可开始使用 PayHub</div>
+<div class="form">
+<div class="field"><label>商户名称</label><input id="regName" placeholder="您的公司或商户名称" autocomplete="organization"></div>
+<div class="field"><label>邮箱</label><input id="regEmail" type="email" placeholder="name@example.com" autocomplete="email"></div>
+<div class="field"><label>设置密码</label><input id="regPass" type="password" placeholder="至少 6 位字符" autocomplete="new-password"></div>
+<div class="field"><label>确认密码</label><input id="regPass2" type="password" placeholder="再次输入密码" autocomplete="new-password"></div>
+<label class="check"><input type="checkbox" id="terms"> 我已阅读并同意商户服务条款</label>
+<button class="primary" id="regBtn" onclick="register()">创建商户账户</button>
+</div></div>
+<div class="bottom">PayHub Merchant Center · HTTPS 安全连接</div>
+</div></section></div>
+<script>
+const $=id=>document.getElementById(id);
+function msg(t,type="err"){$("notice").textContent=t;$("notice").className="notice "+type;$("notice").style.display="block"}
+function clearMsg(){$("notice").style.display="none"}
+function tabs(login){clearMsg();$("loginTab").classList.toggle("active",login);$("regTab").classList.toggle("active",!login);$("loginForm").style.display=login?"block":"none";$("regForm").style.display=login?"none":"block"}
+$("loginTab").onclick=()=>tabs(true);$("regTab").onclick=()=>tabs(false);
+async function req(url,body){const r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.message||"请求失败");return d}
+async function login(){clearMsg();const email=$("loginEmail").value.trim(),password=$("loginPass").value;if(!email||!password)return msg("请输入邮箱和密码");$("loginBtn").disabled=true;$("loginBtn").textContent="登录中…";try{const d=await req("/api/auth/login",{email,password});localStorage.setItem("payhub_token",d.token);localStorage.setItem("payhub_user",JSON.stringify(d.user));location.href="/dashboard"}catch(e){msg(e.message)}finally{$("loginBtn").disabled=false;$("loginBtn").textContent="登录商户中心"}}
+async function register(){clearMsg();const name=$("regName").value.trim(),email=$("regEmail").value.trim(),p=$("regPass").value,p2=$("regPass2").value;if(!name||!email||!p)return msg("请完整填写注册信息");if(p.length<6)return msg("密码至少需要 6 位");if(p!==p2)return msg("两次密码不一致");if(!$("terms").checked)return msg("请先同意商户服务条款");$("regBtn").disabled=true;$("regBtn").textContent="创建中…";try{const d=await req("/api/auth/register",{name,email,password:p});localStorage.setItem("payhub_token",d.token);localStorage.setItem("payhub_user",JSON.stringify(d.user));location.href="/dashboard"}catch(e){msg(e.message)}finally{$("regBtn").disabled=false;$("regBtn").textContent="创建商户账户"}}
+function forgot(){msg("当前版本暂未接入邮箱找回密码。V8 可加入验证码与密码重置。")}
+$("loginPass").addEventListener("keydown",e=>{if(e.key==="Enter")login()});
+if(localStorage.getItem("payhub_token")) location.href="/dashboard";
+</script></body></html>

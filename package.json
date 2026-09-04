@@ -1,0 +1,21 @@
+{
+  "name": "payhub-v4",
+  "version": "4.0.0",
+  "private": true,
+  "description": "PayHub merchant payment platform - auth, orders, wallet ledger, API keys and webhook scaffold",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.7.0",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "crypto-js": "^4.2.0"
+  }
+}
