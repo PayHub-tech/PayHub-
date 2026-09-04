@@ -31,7 +31,7 @@ async function hmac(secret, message) {
 async function sha256Hex(s) { return hex(new Uint8Array(await crypto.subtle.digest('SHA-256', enc.encode(s)))); }
 async function passwordHash(password) {
   const salt = crypto.getRandomValues(new Uint8Array(16));
-  const iterations = 120000;
+  const iterations = 100000;
   const key = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
   const bits = new Uint8Array(await crypto.subtle.deriveBits({ name:'PBKDF2', salt, iterations, hash:'SHA-256' }, key, 256));
   return `pbkdf2$${iterations}$${hex(salt)}$${hex(bits)}`;
@@ -40,8 +40,10 @@ async function passwordCompare(password, stored) {
   try {
     const [kind, it, saltHex, hashHex] = String(stored).split('$');
     if (kind !== 'pbkdf2') return false;
+    const iterations = Number(it);
+    if (!Number.isInteger(iterations) || iterations <= 0 || iterations > 100000) return false;
     const key = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']);
-    const bits = new Uint8Array(await crypto.subtle.deriveBits({ name:'PBKDF2', salt:bytesHex(saltHex), iterations:Number(it), hash:'SHA-256' }, key, 256));
+    const bits = new Uint8Array(await crypto.subtle.deriveBits({ name:'PBKDF2', salt:bytesHex(saltHex), iterations, hash:'SHA-256' }, key, 256));
     const a = bytesHex(hashHex); if (a.length !== bits.length) return false;
     let d=0; for(let i=0;i<a.length;i++) d |= a[i]^bits[i]; return d===0;
   } catch { return false; }
