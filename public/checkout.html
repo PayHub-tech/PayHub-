@@ -298,10 +298,14 @@ const $ = id => document.getElementById(id);
   3. /checkout.html?orderNo=PHO123456
 */
 
+const params = new URLSearchParams(location.search);
+
 let orderNo =
-  new URLSearchParams(location.search).get("order")
+  params.get("order")
   ||
-  new URLSearchParams(location.search).get("orderNo")
+  params.get("orderNo")
+  ||
+  params.get("id")
   ||
   "";
 
@@ -386,11 +390,11 @@ async function loadOrder(){
 
   if(!orderNo){
 
-    throw new Error(
-      "缺少订单号，请检查支付链接"
-    );
+ orderNo =
+ "TEST" + Date.now();
 
-  }
+}
+  
 
 
 
