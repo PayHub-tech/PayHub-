@@ -305,6 +305,47 @@ app.post("/api/orders", auth, (req,res) => {
     const no = orderNo();
     const expired = new Date(Date.now() + Math.max(1, Number(expiresMinutes)||30)*60000).toISOString();
     const payUrl = `/pay/${no}`;
+    app.get("/pay/:orderNo",(req,res)=>{
+
+ const order=db.prepare(
+   "SELECT * FROM orders WHERE order_no=?"
+ ).get(req.params.orderNo);
+
+ if(!order){
+   return res.status(404).send("订单不存在");
+ }
+
+ res.send(`
+ <html>
+ <body style="text-align:center;margin-top:50px">
+
+ <h2>PayHub 收银台</h2>
+
+ <p>订单号：${order.order_no}</p>
+
+ <p>金额：${order.amount_cents/100} ${order.currency}</p>
+
+ <button onclick="
+ fetch('/api/checkout/${order.order_no}/pay-v10',{
+ method:'POST',
+ headers:{
+ 'Content-Type':'application/json'
+ },
+ body:JSON.stringify({
+ channel:'mock'
+ })
+ })
+ .then(r=>r.json())
+ .then(x=>alert(JSON.stringify(x)))
+ ">
+ 立即支付
+ </button>
+
+ </body>
+ </html>
+ `);
+
+});
     const info = db.prepare(`
       INSERT INTO orders(order_no,merchant_id,merchant_order_no,amount_cents,currency,channel,subject,pay_url,client_ip,expired_at)
       VALUES(?,?,?,?,?,?,?,?,?,?)
@@ -316,10 +357,31 @@ app.post("/api/orders", auth, (req,res) => {
 
 function formatOrder(o) {
   return {
-    id:o.id, orderNo:o.order_no, merchantOrderNo:o.merchant_order_no,
-    amount:(o.amount_cents/100).toFixed(2), currency:o.currency, channel:o.channel,
-    subject:o.subject, status:o.status, payUrl:o.pay_url, expiredAt:o.expired_at,
-    paidAt:o.paid_at, createdAt:o.created_at, updatedAt:o.updated_at
+    id: o.id,
+
+    // 同时兼容前端两种写法
+    orderNo: o.order_no,
+    order_no: o.order_no,
+
+    merchantOrderNo: o.merchant_order_no,
+    merchant_order_no: o.merchant_order_no,
+
+    amount: (o.amount_cents / 100).toFixed(2),
+    currency: o.currency,
+
+    channel: o.channel,
+    subject: o.subject,
+
+    status: o.status,
+
+    payUrl: o.pay_url,
+    pay_url: o.pay_url,
+
+    expiredAt: o.expired_at,
+    paidAt: o.paid_at,
+
+    createdAt: o.created_at,
+    updatedAt: o.updated_at
   };
 }
 
