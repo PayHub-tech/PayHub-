@@ -310,7 +310,12 @@ app.post("/api/orders", auth, (req,res) => {
  const order=db.prepare(
    "SELECT * FROM orders WHERE order_no=?"
  ).get(req.params.orderNo);
-
+res.json({
+ message:"订单创建成功",
+ order:formatOrder(order),
+ orderNo:no,
+ payUrl:payUrl
+});
  if(!order){
    return res.status(404).send("订单不存在");
  }
