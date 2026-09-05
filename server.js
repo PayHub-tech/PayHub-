@@ -305,17 +305,7 @@ app.post("/api/orders", auth, (req,res) => {
     const no = orderNo();
     const expired = new Date(Date.now() + Math.max(1, Number(expiresMinutes)||30)*60000).toISOString();
     const payUrl = `${req.protocol}://${req.get("host")}/pay/${no}`;
-    app.get("/pay/:orderNo",(req,res)=>{
-
- const order=db.prepare(
-   "SELECT * FROM orders WHERE order_no=?"
- ).get(req.params.orderNo);
-res.json({
- message:"订单创建成功",
- order:formatOrder(order),
- orderNo:no,
- payUrl:payUrl
-});
+    
  if(!order){
    return res.status(404).send("订单不存在");
  }
@@ -356,9 +346,69 @@ res.json({
       VALUES(?,?,?,?,?,?,?,?,?,?)
     `).run(no,req.user.id,String(merchantOrderNo),amountCents,String(currency),String(channel),String(subject),payUrl,req.ip,expired);
     const order = db.prepare("SELECT * FROM orders WHERE id=?").get(info.lastInsertRowid);
-    res.json({ message:"订单创建成功", order:formatOrder(order) });
+
+res.json({
+  message:"订单创建成功",
+  order:formatOrder(order),
+  orderNo:no,
+  payUrl:payUrl
+});
   } catch(e) { res.status(400).json({message:e.message || "创建订单失败"}); }
 });
+});
+
+
+
+app.get("/pay/:orderNo",(req,res)=>{
+
+  const order=db.prepare(
+    "SELECT * FROM orders WHERE order_no=?"
+  ).get(req.params.orderNo);
+
+
+  if(!order){
+    return res.status(404).send("订单不存在");
+  }
+
+
+  res.send(`
+  <html>
+  <body style="text-align:center;margin-top:50px">
+
+  <h2>PayHub 收银台</h2>
+
+  <p>订单号：${order.order_no}</p>
+
+  <p>金额：${order.amount_cents/100} ${order.currency}</p>
+
+
+  <button onclick="
+  fetch('/api/checkout/${order.order_no}/pay-v10',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json'
+    },
+    body:JSON.stringify({
+      channel:'mock'
+    })
+  })
+  .then(r=>r.json())
+  .then(x=>alert(JSON.stringify(x)))
+  ">
+  立即支付
+  </button>
+
+
+  </body>
+  </html>
+  `);
+
+});
+
+
+
+
+
 
 function formatOrder(o) {
   return {
