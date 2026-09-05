@@ -304,7 +304,7 @@ app.post("/api/orders", auth, (req,res) => {
     if (exists) return res.status(409).json({message:"商户订单号已存在", order:exists});
     const no = orderNo();
     const expired = new Date(Date.now() + Math.max(1, Number(expiresMinutes)||30)*60000).toISOString();
-    const payUrl = `/pay/${no}`;
+    const payUrl = `${req.protocol}://${req.get("host")}/pay/${no}`;
     app.get("/pay/:orderNo",(req,res)=>{
 
  const order=db.prepare(
