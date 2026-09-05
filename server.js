@@ -243,7 +243,7 @@ function cents(v) {
 function publicMerchant(m) {
   return {
     id: m.id, merchantNo: m.merchant_no, email: m.email, name: m.name,
-    status: m.status, balance: (m.balance_cents_cents / 100).toFixed(2),
+    status: m.status, balance: (m.balance_cents / 100).toFixed(2),
     frozen: (m.frozen_cents / 100).toFixed(2), createdAt: m.created_at
   };
 }
@@ -295,7 +295,7 @@ app.get("/api/dashboard/stats", auth, (req,res) => {
   const paidCount = db.prepare("SELECT COUNT(*) c FROM orders WHERE merchant_id=? AND status='paid'").get(mid).c;
   const m = getMerchant(mid);
   res.json({
-    balance:(m.balance_cents_cents/100).toFixed(2),
+    balance:(m.balance_cents/100).toFixed(2),
     totalPaid:(total/100).toFixed(2),
     orderCount:count,
     pendingCount:pending,
