@@ -1118,6 +1118,11 @@ app.get('/api/admin/financial-summary',adminAuth,(req,res)=>{ const x=db.prepare
 // Apply risk controls to new merchant order creation without changing the existing public API shape.
 
 app.use(express.static(path.join(__dirname,"public")));
+
+app.get("/checkout/:orderNo", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "checkout.html"));
+});
+
 app.get("/dashboard",(req,res)=>res.sendFile(path.join(__dirname,"public","dashboard.html")));
 app.get("/admin",(req,res)=>res.sendFile(path.join(__dirname,"public","admin.html")));
 app.get("*",(req,res)=>res.sendFile(path.join(__dirname,"public","index.html")));
