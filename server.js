@@ -204,7 +204,16 @@ function merchantNo() {
   return "PH" + Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10);
 }
 function orderNo() {
-  return "PHO" + Date.now().toString() + Math.floor(Math.random() * 900 + 100);
+  const time = new Date()
+    .toISOString()
+    .replace(/[-T:.Z]/g, "");
+
+  const random = crypto
+    .randomBytes(4)
+    .toString("hex")
+    .toUpperCase();
+
+  return "PH" + time + random;
 }
 function randomKey(prefix) {
   return prefix + crypto.randomBytes(18).toString("hex");
